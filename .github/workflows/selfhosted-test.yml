@@ -1,0 +1,17 @@
+name: Self-hosted sanity test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Print environment info
+        run: |
+          echo "Runner is alive."
+          echo "Machine: $(hostname)"
+          echo "OS: $(uname -a)"
+          echo "Current directory: $(pwd)"
+          echo "Docker version: $(docker --version)"
+          echo "Terraform version: $(terraform --version || true)"
