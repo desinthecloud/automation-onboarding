@@ -41,7 +41,8 @@ jobs:
         id: port
         run: |
           ENV="${{ steps.vars.outputs.env_name }}"
-          PORT=$(docker inspect app-$ENV | jq -r '.[0].NetworkSettings.Ports["8080/tcp"][0].HostPort')
+          CONTAINER_NAME="app-${ENV}"
+          PORT=$(docker inspect -f '{{ (index (index .NetworkSettings.Ports "8080/tcp") 0).HostPort }}' "$CONTAINER_NAME")
           echo "port=${PORT}" >> $GITHUB_OUTPUT
 
       - name: Output environment info
