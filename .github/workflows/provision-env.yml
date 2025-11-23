@@ -1,0 +1,52 @@
+name: Provision Sandbox Environment
+
+on:
+  push:
+    branches:
+      - 'project/*'
+
+jobs:
+  provision:
+    runs-on: self-hosted
+
+    env:
+      TF_DIR: infra/terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract environment name from branch
+        id: vars
+        run: |
+          BRANCH="${GITHUB_REF##*/}"
+          # Replace slashes with dashes for safe naming
+          ENV_NAME="${BRANCH//\//-}"
+          echo "env_name=${ENV_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Ensure Terraform present
+        run: terraform --version
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_DIR }}
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: ${{ env.TF_DIR }}
+        env:
+          TF_VAR_env_name: ${{ steps.vars.outputs.env_name }}
+        run: terraform apply -auto-approve
+
+      - name: Get container port
+        id: port
+        run: |
+          ENV="${{ steps.vars.outputs.env_name }}"
+          PORT=$(docker inspect app-$ENV | jq -r '.[0].NetworkSettings.Ports["8080/tcp"][0].HostPort')
+          echo "port=${PORT}" >> $GITHUB_OUTPUT
+
+      - name: Output environment info
+        run: |
+          ENV="${{ steps.vars.outputs.env_name }}"
+          PORT="${{ steps.port.outputs.port }}"
+          echo "Sandbox Name: $ENV"
+          echo "App Running At: http://localhost:${PORT}"
