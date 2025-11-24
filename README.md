@@ -1,6 +1,6 @@
 # **Automation Onboarding Platform**
 
-### **Self-Service Ephemeral Sandbox Environments for Dev Teams**
+**Self-Service Ephemeral Sandbox Environments for Dev Teams**
 
 This project is a fully automated *“on-demand sandbox environment generator”* built inside a homelab.
 It automatically provisions isolated development environments whenever a new project branch is pushed, using Terraform, Docker, and a self-hosted GitHub Actions runner.
@@ -14,7 +14,7 @@ This platform makes environments **instant, consistent, disposable, and automate
 
 ---
 
-# **✨ What This System Does**
+# ** What This System Does**
 
 ### 1. Creates a full sandbox environment from a single GitHub branch
 
@@ -71,7 +71,7 @@ A nightly or branch-deletion cleanup pipeline can be added easily.
 
 ---
 
-# ** System Architecture**
+# System Architecture
 
 ```
 GitHub Branch Push (project/*)
@@ -93,7 +93,7 @@ Docker Engine
 
 ---
 
-# ** Project Structure**
+# Project Structure
 
 ```
 automation-onboarding/
@@ -121,16 +121,16 @@ automation-onboarding/
 
 ---
 
-# ** How It Works (Step-By-Step)**
+#  How It Works (Step-By-Step)
 
-## **1. Developer creates a new branch**
+## 1. Developer creates a new branch
 
 ```
 git checkout -b project/new-feature
 git push -u origin project/new-feature
 ```
 
-## **2. GitHub Actions triggers automatically**
+## 2. GitHub Actions triggers automatically
 
 Matched by:
 
@@ -141,7 +141,7 @@ on:
       - 'project/*'
 ```
 
-## **3. Workflow runs on the self-hosted runner**
+## 3. Workflow runs on the self-hosted runner
 
 This VM contains:
 
@@ -150,7 +150,7 @@ This VM contains:
 * The sample Go build
 * The entire Terraform provisioning toolchain
 
-## **4. Terraform provisions the sandbox**
+## 4. Terraform provisions the sandbox
 
 Terraform creates:
 
@@ -166,7 +166,7 @@ sandbox-new-feature
 └── db-new-feature
 ```
 
-## **5. Workflow extracts the host port and prints the URL**
+## 5. Workflow extracts the host port and prints the URL
 
 GitHub Actions uses Docker inspect to determine the assigned host port, then outputs:
 
@@ -175,7 +175,7 @@ Sandbox Name: project-new-feature
 App Running At: http://localhost:32770
 ```
 
-## **6. Developer can immediately use the environment**
+## 6. Developer can immediately use the environment
 
 Inside the homelab VM:
 
@@ -191,17 +191,17 @@ Hello from sandbox environment: project-new-feature
 
 ---
 
-# ** Local Testing**
+# Local Testing
 
 Inside the VM:
 
-### **Build app**
+### Build app
 
 ```bash
 docker build -t sandbox-app:local -f docker/Dockerfile .
 ```
 
-### **Run app**
+### Run app
 
 ```bash
 docker run -d -p 8080:8080 --name api-test sandbox-app:local
@@ -210,7 +210,7 @@ curl http://localhost:8080
 
 ---
 
-# ** Manual Teardown**
+# Manual Teardown
 
 From the Terraform directory:
 
@@ -227,7 +227,7 @@ terraform destroy -auto-approve -var="env_name=project-new-feature"
 
 ---
 
-# ** Technologies Used**
+# Technologies Used
 
 * **GitHub Actions (Self-Hosted Runner)**
 * **Terraform (Docker Provider)**
@@ -240,7 +240,7 @@ This stack models a real startup DevOps setup, where ephemeral environments are 
 
 ---
 
-# ** Why This Project Matters (Portfolio Narrative)**
+# Why This Project Matters
 
 This project demonstrates:
 
@@ -258,7 +258,7 @@ This is production-level platform automation — just running on your own hardwa
 
 ---
 
-# ** Future Enhancements**
+# Future Enhancements
 
 * [ ] Auto-teardown on branch deletion
 * [ ] Slack notifications with sandbox URLs
@@ -270,7 +270,7 @@ This is production-level platform automation — just running on your own hardwa
 
 ---
 
-# **🧑‍💻 Author**
+# Author
 
 **Desiree’ Weston**
 Cloud & DevOps Engineer
